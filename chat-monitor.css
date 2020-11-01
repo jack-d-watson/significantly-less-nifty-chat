@@ -82,10 +82,6 @@ div.scrollable-area div.simplebar-track {
 .chat-line__username-container:hover {
   background: unset !important;
 }
-/* mod icons */
-.chat-line__username-container > div {
-  display: none !important;
-}
 /* badges */
 .chat-badge {
   display: none !important;
