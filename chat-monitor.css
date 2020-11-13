@@ -1,5 +1,7 @@
 /* the chat window */
-.chat-room {
+.chat-room,
+/* chat preview in chat appearance settings */
+.message-preview__line-container {
 /* should have a black background */
   background: black !important;
 }
@@ -17,48 +19,83 @@ div.scrollable-area div.simplebar-track {
   display: none !important;
 }
 
-/* Thanks malc for the fixes to how the chat-interface looks*/
+/* the chat list */
+div.chat-list--default, div.chat-list--other,
+/* chat preview in chat appearance settings */
+div.message-preview__line-container {
+  font-weight: 300;
+  line-height: 1.1em;
+}
+/* the chat list now supports changing font size, so we specify larger ones */
+div.chat-list--other.font-scale--small {
+  font-size: 16px;
+}
+div.chat-list--default.font-scale--default {
+  font-size: 24px;
+}
+div.chat-list--other.font-scale--bigger {
+  font-size: 32px;
+}
+div.chat-list--other.font-scale--biggest {
+  font-size: 48px;
+}
+
+/* where you write your messages */
 .chat-input textarea,
-.chat-input span.tw-animated-number,
+/* the channel points number */
+.chat-input div[data-test-selector="balance-string"],
+/* the chat send button */
 .chat-input button[data-a-target="chat-send-button"] {
+/* bigger, to better match the chat list */
   font-size: 2.4rem !important;
 }
 
 /* the container of messages */
 .chat-scrollable-area__message-container {
-  color: #eee;
+/* top-down flex box */
   display: flex !important;
   flex-direction: column;
   justify-content: flex-start;
-  padding-top: 0 !important;
 }
 .chat-scrollable-area__message-container.reverse {
+/* bottom-up */
   flex-direction: column-reverse;
+/* this is important for smooth entrance of new messages */
   padding-bottom: 100vh !important;
 }
 
 /* message and notice lines */
-/* specifically normal chat messages and not chat messages embedded in notices */
-.chat-scrollable-area__message-container > .chat-line__message,
-/* the "Welcome to the chat room" message */
-.chat-line__status,
+/* normal chat messages */
+div.chat-line__message,
+/* the "Welcome to the chat room" message and moderation actions */
+div.chat-line__status,
 /* Sub, Gift-Sub and Channel Point Redeem notices */
-.user-notice-line {
+div.user-notice-line {
+/* some notices have background colours we don't want */
+  background-color: unset !important;
+/* some notices have margins we don't want */
+  margin: 0 !important;
 /* pad around messages to make them nice and readable */
-/* we target non-embedded messages specifically to avoid double-padding */
-  padding: 3px 6px !important;
+  padding: 0.1em 0.2em !important;
 /* border between messages to improve readability */
   border-bottom: #444 solid 1px !important;
 }
-/* all chat messages, including those embedded in notices */
-.chat-line__message,
-/* the "Welcome to the chat room" message */
-.chat-line__status,
-/* Sub, Gift-Sub and Channel Point Redeem notices */
-.user-notice-line {
-/* larger text size improve readability */
-  font-size: 32px !important;
-  line-height: 35px !important;
+/* chat messages embedded in notices */
+div.chat-line__message.chat-line--inline {
+/* don't double-pad embedded messages */
+  padding: 0 !important;
+}
+/* do zebra-striping */
+.chat-line__message.odd,
+.chat-line__status.odd,
+.user-notice-line.odd {
+  background-color: #111 !important;
+}
+div.chat-line__message .chat-line__message-highlight {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
 }
 /* remove hover highlighting that's part of threads */
 .chat-line__message:focus-within .chat-line__message-highlight,
@@ -66,39 +103,63 @@ div.scrollable-area div.simplebar-track {
 .chat-line__message:hover .chat-line__message-highlight {
   background: unset !important;
 }
-/* do zebra-striping */
-.chat-line__message.odd,
-.user-notice-line.odd {
-  background-color: #111 !important;
-}
 
-/* hide reply button */
+/* reply button */
 .chat-line__reply-icon {
-  display: none !important;
+/* don't get taller with larger chat sizes */
+  font-size: 3rem;
+  font-size: var(--button-size-default);
+  line-height: 1em;
 }
 
+/* quoted reply */
+.chat-line__message div.tw-c-text-alt-2 {
+/* responsive spacing between quote and message */
+  line-height: 1.3em !important;
+}
+/* reply icon */
+.chat-line__message div.tw-c-text-alt-2 svg {
+/* stop being non-responsive tiny text */
+  height: 0.9em;
+  width: 0.9em;
+}
+/* text of the quoted reply */
+.chat-line__message div.tw-c-text-alt-2 p {
+/* stop being non-responsive tiny text */
+  font-size: unset !important;
+  line-height: unset !important;
+}
+/* mention in quoted reply */
+.chat-line__message div.tw-c-text-alt-2 p div.reply-line--mentioned {
+/* stop being non-responsive tiny text */
+  background: unset !important;
+  color: unset !important;
+  padding: unset;
+}
+
+/* message timestamps */
+span.chat-line__timestamp {
+  color: unset;
+/* Twitch default doesn't support tabular nums. :( */
+  font-variant-numeric: tabular-nums;
+}
 /* message authors */
-/* remove highlighting on hover */
 .chat-line__username-container:hover {
+/* remove highlighting on hover */
   background: unset !important;
 }
 /* badges */
 .chat-badge {
+/* don't display them */
   display: none !important;
 }
 /* usernames (incl. localised) */
 .chat-author__display-name,
 .chat-author__intl-login {
   color: green !important;
-  font-weight: 700;
+  font-weight: 600;
 }
 
-/* message content */
-span[data-a-target="chat-message-text"],
-img.chat-image {
-  color: white !important;
-  font-weight: 300 !important;
-}
 /* deleted messages */
 span.chat-line__message--deleted-notice {
   opacity: 0.2;
@@ -106,48 +167,77 @@ span.chat-line__message--deleted-notice {
 /* highlighted messages */
 span.chat-line__message-body--highlighted {
 /* remove top and bottom borders as they overlap the text on wrapped messages */
-  border-top: none !important;
-  border-bottom: none !important;
+  border-width: 0 0.125em;
 /* negative margin to account for side border thickness */
-  margin-left: -4px !important;
-  margin-right: -4px !important;
+  margin: 0 -0.125em;
+  line-height: 1.2em;
 }
 
+/* message content */
+/* message plain text */
+span.text-fragment,
+/* mentions */
+span.mention-fragment.mention-fragment--sender,
+span.mention-fragment.mention-fragment--recipient,
 /* links */
-a {
-  color: inherit !important;
+a.link-fragment,
+a.link-fragment:visited {
+  color: white;
 }
-.link-fragment:hover {
+span.mention-fragment,
+a.link-fragment:hover {
+/* remove highlighting on hover */
   background: unset !important;
-}
-
-/* mentions in messages */
-span.mention-fragment {
-  background-color: transparent !important;
+/* mentions have padding for some reason */
   padding: 0;
 }
-/* mentions where we're the recipient */
-span.mention-fragment.mention-fragment--recipient {
-  color: inherit;
-}
 
-/* twitch really tries to push emotes down and we don't want that */
+/* emotes are buttons that tell you where they came from */
+div.chat-line__message--emote-button,
+/* which contain a span */
+span[data-a-target="emote-name"],
+/* which becomes a div when you hover over the emote */
+div[data-a-target="emote-name"],
+/* which contains a div that sets their size */
+div.chat-image__container,
+/* which contains the emote image itself */
+img.chat-image.chat-line__message--emote {
+/* responsive sizing */
+  height: 1.1em;
+  width: 1.1em;
+}
 div.chat-line__message--emote-button,
 div.chat-image__container,
 img.chat-image.chat-line__message--emote {
+/* remove margins */
   margin: 0;
-  vertical-align: baseline;
+/* align to bottom */
+  vertical-align: bottom;
+}
+img.chat-image.chat-line__message--emote {
+/* don't stretch images */
+  object-fit: contain;
 }
 .chat-line__message--emote-button:hover {
+/* remove highlighting on hover */
   background: unset !important;
+}
+/* the tooltip with the name of the emote */
+.tw-root--hover div.tw-tooltip-wrapper:hover > div.tw-tooltip {
+/* hide it always */
+  display: none;
 }
 
 /* inlined images and videos */
 .chat-line__message img,
 .chat-line__message video {
+/* scale images to fit if they're too large */
   max-width: 100%;
-  max-height: 50vh;
+  max-height: min(20em, 50vh);
+/* align images to center */
   margin: 0.25em auto 0;
+/* videos align to bottom by default */
+  vertical-align: top;
 }
 
 /* clip embeds */
@@ -156,67 +246,85 @@ img.chat-image.chat-line__message--emote {
 }
 /* preview images */
 .chat-line__message .tw-border-radius-medium.tw-elevation-1 div.chat-card__preview-img {
-  width: 112px;
-  height: 63px;
+  width: 3.5em;
+  height: 2em;
 }
 /* title */
 .chat-line__message .tw-border-radius-medium.tw-elevation-1 .chat-card__title p {
-  font-size: 32px !important;
-  line-height: 35px !important;
+  font-size: unset !important;
+  line-height: unset !important;
   color: white;
 }
 /* author */
 .chat-line__message .tw-border-radius-medium.tw-elevation-1 .chat-card__title + div p {
-  font-size: 32px !important;
-  line-height: 35px !important;
+  font-size: unset !important;
+  line-height: unset !important;
   color: #bbb !important;
 }
 
 /* Clean up notices */
-/* remove star from sub announcements */
-.user-notice-line div.tw-c-text-alt-2 {
-  display: none !important;
+/* Sub, Gift-Sub and Channel Point Redeem notices */
+.user-notice-line {
+/* remove left highlight border */
+  border-left: none;
 }
-/* channel point icon */
-.user-notice-line span.tw-c-text-alt-2 > div.tw-align-top.tw-inline-flex {
-/* align middle instead of top */
-  vertical-align: 5% !important;
+/* remove star from sub announcements */
+/* tw-c classes are just colours, channel point redeem notices have the latter but not the former */
+.user-notice-line.tw-c-background-alt div.tw-c-text-alt-2 {
+  display: none;
+}
+/* the notice text part of the sub notice */
+.user-notice-line div.tw-mg-l-05 {
+/* don't indent the text in */
+  margin-left: 0 !important;
+/* color to match channel point redeem notices */
+  color: var(--color-text-alt-2);
+}
+/* classes that change the color again */
+.user-notice-line div.tw-mg-l-05 .tw-c-text-base,
+.user-notice-line div.tw-mg-l-05 .tw-c-text-link,
+/* Prime link */
+.user-notice-line div.tw-mg-l-05 .chat-line__message--link {
+/* inherit color to match the rest of the notice */
+  color: unset !important;
 }
 /* the chatter who subscribed */
 .user-notice-line div.tw-mg-l-05 > p > .tw-block {
 /* their name should be on the same line as their message */
   display: inline !important;
 }
-/* the notice text part of the sub notice */
-.user-notice-line div.tw-mg-l-05 {
-/* don't indent the text in */
-  margin-left: 0 !important;
-/* but do space it from the message */
-  margin-bottom: 3px !important;
-}
 /* sub messages have a class-less paragraph, which forces small text again */
 .user-notice-line div.tw-mg-l-05 > p,
 /* converted subs have yet another p element that breaks it yet again */
 .user-notice-line div.tw-mg-l-05 > p p.tw-c-text-link {
-  font-size: 32px !important;
-  line-height: 35px !important;
+  font-size: unset;
+  line-height: unset;
 }
 /* the message attached to the sub notice */
 .user-notice-line div.tw-mg-t-05 {
-/* the spacing from the notice is performed in the notice instead */
-  margin-top: 0 !important;
+/* responsive spacing between notice and message */
+  margin-top: 0.2em !important;
 }
-/* Sub and Gift-Sub notices have a grey background that we don't want */
-div.tw-c-background-alt {
-  background-color: unset !important;
+/* spacers between channel points icon and surrounding text */
+.user-notice-line div.channel-points-reward-line__icon::after,
+.user-notice-line div.channel-points-reward-line__icon::before {
+/* responsive sizing to prevent channel point notices being taller than normal messages */
+  font-size: 0.5em;
+  line-height: 0.5em;
 }
-/* Sub, Gift-Sub and Channel Point Redeem notices */
-/* very specific to avoid margin being overwritten */
-.tw-mg-y-05.tw-pd-r-2.tw-pd-y-05.user-notice-line {
-/* remove left highlight border */
-  border-left: none;
-/* remove margins - our messages are already nicely spaced */
-  margin: 0 !important;
+/* channel point icon */
+.user-notice-line div.channel-points-icon,
+/* channel point icon image */
+.user-notice-line div.channel-points-icon > figure > svg {
+/* responsive sizing */
+  height: 1.1em;
+  width: 1.1em;
+}
+/* channel point icon container */
+.user-notice-line div.channel-points-reward-line__icon,
+.user-notice-line div.channel-points-icon {
+/* default alignment is middle, which doesn't work with our new sizing */
+  vertical-align: bottom !important;
 }
 
 #settings-wheel {
