@@ -255,7 +255,7 @@ function generateFontCss() {
   generatedCss = "";
   if (GM_config.get("font") == "Open Sans Condensed") {
     generatedCss += "@import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,300italic,700);\n";
-    generatedCss += "html body {\n";
+    generatedCss += "div.chat-list--default, div.chat-list--other, div.message-preview__line-container, .chat-input textarea {\n";
     generatedCss += "font-family: 'Open Sans Condensed', sans-serif !important;\n";
     generatedCss += "}\n";
   }
