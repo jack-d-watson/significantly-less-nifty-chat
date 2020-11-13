@@ -328,27 +328,27 @@ function actionFunction() {
                 .forEach(function(link) {
                   let imageLink = getImageLink(link.href);
                   if (imageLink) {
-                    linkImage(link.parentNode, imageLink);
+                    linkImage(link, imageLink);
                     return;
                   }
                   let videoLink = getVideoLink(link.href);
                   if (videoLink) {
-                    linkVideo(link.parentNode, videoLink);
+                    linkVideo(link, videoLink);
                     return;
                   }
                   let giphyLink = getGiphyLink(link.href);
                   if (giphyLink) {
-                    linkImage(link.parentNode, giphyLink);
+                    linkImage(link, giphyLink);
                     return;
                   }
                   let thumbnailLink = getYouTubeLink(link.href);
                   if (thumbnailLink) {
-                    linkImage(link.parentNode, thumbnailLink);
+                    linkImage(link, thumbnailLink);
                     return;
                   }
                   let twitterID = getTweetID(link.href);
                   if (twitterID) {
-                    linkTwitter(link.parentNode, twitterID);
+                    linkTwitter(link, twitterID);
                     return;
                   }
                 }
@@ -426,7 +426,7 @@ function getTweetID(url) {
 
 function linkImage(node, imageURL) {
   var image = document.createElement("img");
-  node.appendChild(image);
+  node.parentNode.appendChild(image);
   image.style.display = "none";
   image.src = imageURL;
   image.addEventListener("load",
@@ -439,7 +439,7 @@ function linkImage(node, imageURL) {
 
 function linkVideo(node, videoURL) {
   var video = document.createElement("video");
-  node.appendChild(video);
+  node.parentNode.appendChild(video);
   video.style.display = "none";
   video.src = videoURL;
   video.autoplay = video.loop = video.muted = true;
