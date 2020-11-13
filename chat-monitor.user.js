@@ -3,7 +3,7 @@
 // @namespace      https://roadhog123.co.uk/
 // @description    reformats twitch chat for display on a chat monitor
 // @match          https://www.twitch.tv/popout/*/chat?display*
-// @version        0.307-RPBS02
+// @version        0.307-RPBS03
 // @updateURL      https://raw.githubusercontent.com/road-hog123/significantly-less-nifty-chat/rustproof-bee-shed/chat-monitor.user.js
 // @downloadURL    https://raw.githubusercontent.com/road-hog123/significantly-less-nifty-chat/rustproof-bee-shed/chat-monitor.user.js
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
