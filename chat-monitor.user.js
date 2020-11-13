@@ -291,6 +291,11 @@ function actionFunction() {
             newNode.dataset.height = newNode.scrollHeight;
             scrollReference = scrollDistance += newNode.scrollHeight;
 
+            // Add odd class for zebra-striping
+            if (!newNode.previousElementSibling.classList.contains("odd")) {
+              newNode.classList.add("odd");
+            }
+
             if (!(newNode.classList.contains("chat-line__message") || newNode.classList.contains("user-notice-line"))) {
               // Only treat chat messages
               return;
@@ -348,10 +353,6 @@ function actionFunction() {
                   }
                 }
               );
-            }
-
-            if (!newNode.previousElementSibling.classList.contains("odd")) {
-              newNode.classList.add("odd");
             }
           }
         });
