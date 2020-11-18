@@ -1,11 +1,11 @@
 // ==UserScript==
-// @name           Nifty Chat Monitor, Road-hog123 Customised
+// @name           Nifty Chat Monitor, Road-hog123 Customised, with cheetojack changes
 // @namespace      https://roadhog123.co.uk/
 // @description    inlines Images, GIPHY GIFs, YouTube Thumbnails and Tweets in Twitch chat
 // @match          https://www.twitch.tv/*
-// @version        0.307-RHB
-// @updateURL      https://raw.githubusercontent.com/road-hog123/significantly-less-nifty-chat/master/chat-monitor.user.js
-// @downloadURL    https://raw.githubusercontent.com/road-hog123/significantly-less-nifty-chat/master/chat-monitor.user.js
+// @version        0.307-RHB-J
+// @updateURL      https://raw.githubusercontent.com/jack-d-watson/significantly-less-nifty-chat/master/chat-monitor.user.js
+// @downloadURL    https://raw.githubusercontent.com/jack-d-watson/significantly-less-nifty-chat/master/chat-monitor.user.js
 // @require        https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js
 // @require        https://gist.github.com/raw/2625891/waitForKeyElements.js
 // @grant          GM_log
@@ -17,6 +17,11 @@ var twitterScript = document.createElement("script");
 twitterScript.type = "text/javascript";
 twitterScript.src = "https://platform.twitter.com/widgets.js";
 document.body.appendChild(twitterScript);
+
+const usersToHighlight = [
+    "CHEETOJACK",
+    "BIDBOT"
+]
 
 function onChatLoad() {
   // The node to be monitored
@@ -42,6 +47,22 @@ function onChatLoad() {
         if (!newNode.classList.contains("chat-line__message")) {
           return;
         }
+
+        newNode.querySelectorAll("span.text-fragment")
+          .forEach(function(message) {
+            if(hasBidHighlight(message.textContent)) {
+              highlightMessage(newNode);
+              return;
+            }
+          });
+
+        newNode.querySelectorAll("span.chat-author__display-name")
+          .forEach(function(user) {
+             if(isFromHighlightedUser(user.textContent)) {
+               highlightMessage(newNode);
+               return;
+             }
+          });
 
         //add inline images
         newNode.querySelectorAll(".chat-line__message a.link-fragment")
@@ -78,6 +99,19 @@ function onChatLoad() {
 
   // Pass in the target node, as well as the observer options
   observer.observe(target, {childList: true});
+}
+
+function hasBidHighlight(text) {
+  return text.startsWith("!bid");
+}
+
+function isFromHighlightedUser(message) {
+  return usersToHighlight.includes(message.toUpperCase())
+}
+
+function highlightMessage(node) {
+  node.style = "background-color: #7394bf; color: #2a002a; font-weight: bold;";
+  console.log("node highlighted");
 }
 
 function getImageLink(url) {
